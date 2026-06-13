@@ -5,11 +5,15 @@ const ANALYSIS_NODES: Set<NodeType> = new Set([
   'gc-content', 'orf-finder', 'translation',
   'reverse-complement', 'alignment', 'motif-search',
 ]);
+const ADVANCED_NODES: Set<NodeType> = new Set([
+  'restriction-enzyme', 'primer-design', 'codon-usage', 'protein-properties',
+]);
 const OUTPUT_NODES: Set<NodeType> = new Set(['report', 'csv-export', 'sequence-viewer']);
 
-export function getNodeCategory(type: string): 'input' | 'analysis' | 'output' {
+export function getNodeCategory(type: string): 'input' | 'analysis' | 'advanced-analysis' | 'output' {
   if (INPUT_NODES.has(type as NodeType)) return 'input';
   if (ANALYSIS_NODES.has(type as NodeType)) return 'analysis';
+  if (ADVANCED_NODES.has(type as NodeType)) return 'advanced-analysis';
   if (OUTPUT_NODES.has(type as NodeType)) return 'output';
   return 'analysis';
 }
@@ -29,7 +33,7 @@ export function validateConnection(
     return { valid: false, reason: 'Input nodes cannot have incoming connections.' };
   }
 
-  if (sourceType === targetType && sourceCat === 'analysis') {
+  if (sourceType === targetType && (sourceCat === 'analysis' || sourceCat === 'advanced-analysis')) {
     return { valid: false, reason: 'Cannot connect a node to itself.' };
   }
 

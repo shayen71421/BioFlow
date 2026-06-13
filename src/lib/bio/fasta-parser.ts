@@ -1,5 +1,7 @@
 import type { BioSequence } from '@/types/sequence';
 
+let seqCounter = 0;
+
 export function parseFasta(text: string): BioSequence[] {
   const sequences: BioSequence[] = [];
   const lines = text.split(/\r?\n/);
@@ -8,43 +10,42 @@ export function parseFasta(text: string): BioSequence[] {
 
   for (const line of lines) {
     const trimmed = line.trim();
+    if (trimmed.startsWith(';')) continue;
+
     if (trimmed.startsWith('>')) {
-      if (currentHeader) {
-        sequences.push(makeSequence(currentHeader, currentSeq));
+      if (currentHeader && currentSeq) {
+        sequences.push(createSeq(currentHeader, currentSeq));
       }
       currentHeader = trimmed.slice(1).trim();
       currentSeq = '';
-    } else if (trimmed && !trimmed.startsWith(';')) {
-      currentSeq += trimmed.replace(/\s/g, '').toUpperCase();
+    } else {
+      currentSeq += trimmed.replace(/\s/g, '');
     }
   }
 
-  if (currentHeader) {
-    sequences.push(makeSequence(currentHeader, currentSeq));
+  if (currentHeader && currentSeq) {
+    sequences.push(createSeq(currentHeader, currentSeq));
   }
 
   return sequences;
 }
 
-function makeSequence(header: string, seq: string): BioSequence {
-  const id = header.split(/\s+/)[0] || `seq_${Math.random().toString(36).slice(2, 7)}`;
+function createSeq(header: string, seq: string): BioSequence {
+  const id = `seq_${++seqCounter}_${Date.now()}`;
   return {
-    id,
     header,
-    sequence: seq,
+    sequence: seq.toUpperCase(),
     length: seq.length,
+    id,
   };
 }
 
 export function formatFasta(sequences: BioSequence[]): string {
   return sequences
     .map((s) => {
-      const lines: string[] = [];
-      lines.push(`>${s.header}`);
-      for (let i = 0; i < s.sequence.length; i += 80) {
-        lines.push(s.sequence.slice(i, i + 80));
-      }
-      return lines.join('\n');
+      const header = `>${s.header}`;
+      const body = s.sequence.replace(/(.{80})/g, '$1\n').trim();
+      return `${header}\n${body}`;
     })
     .join('\n');
 }

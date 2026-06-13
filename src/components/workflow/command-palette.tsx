@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import {
   FileInput, ScanSearch, Percent, ArrowRightToLine, ArrowLeftRight,
-  AlignStartVertical, Search, FileText, Table, Eye, Command,
+  AlignStartVertical, Search, FileText, Table, Eye, Scissors, Dna, FlaskConical, Command,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useWorkflowStore } from '@/store/workflow-store';
@@ -13,12 +13,13 @@ import type { NodeType, NodeCategory } from '@/types/workflow';
 
 const iconMap: Record<string, React.FC<{ size?: number }>> = {
   FileInput, ScanSearch, Percent, ArrowRightToLine, ArrowLeftRight,
-  AlignStartVertical, Search, FileText, Table, Eye,
+  AlignStartVertical, Search, FileText, Table, Eye, Scissors, Dna, FlaskConical,
 };
 
 const categoryConfig: Record<NodeCategory, { label: string; color: string }> = {
   input: { label: 'Input', color: 'text-success' },
   analysis: { label: 'Analysis', color: 'text-accent' },
+  'advanced-analysis': { label: 'Advanced Analysis', color: 'text-[#EC4899]' },
   output: { label: 'Output', color: 'text-danger' },
 };
 

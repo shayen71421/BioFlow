@@ -15,7 +15,6 @@ import { validateConnection } from '@/lib/workflow/validation';
 import { executeWorkflow, type ExecutionContext } from '@/lib/workflow/execution';
 import type { BioSequence } from '@/types/sequence';
 import type { WorkflowTemplate } from '@/lib/workflow/templates';
-// toast intentionally not imported here — storage callbacks run outside React tree
 
 function stripSequenceData(obj: { nodes?: { data?: Record<string, unknown> }[] }): typeof obj {
   if (!obj.nodes) return obj;
@@ -47,6 +46,7 @@ interface WorkflowState {
   isRunning: boolean;
   executionError: string | null;
   executionContext: ExecutionContext | null;
+  nodeResultCache: Map<string, { result: unknown; hash: string }>;
 
   history: HistoryEntry[];
   historyIndex: number;
@@ -68,7 +68,7 @@ interface WorkflowState {
   redo: () => void;
   pushHistory: () => void;
 
-  runWorkflow: (sequences: BioSequence[]) => Promise<void>;
+  runWorkflow: (sequences: BioSequence[], changedNodeIds?: string[]) => Promise<void>;
 
   importWorkflow: (json: string) => void;
   exportWorkflow: () => string;
@@ -88,6 +88,7 @@ export const useWorkflowStore = create<WorkflowState>()(
       isRunning: false,
       executionError: null,
       executionContext: null,
+      nodeResultCache: new Map(),
       history: [],
       historyIndex: -1,
       savedWorkflows: [],
@@ -189,7 +190,7 @@ export const useWorkflowStore = create<WorkflowState>()(
 
       clearCanvas: () => {
         get().pushHistory();
-        set({ nodes: [], edges: [], selectedNodeId: null, executionError: null, executionContext: null });
+        set({ nodes: [], edges: [], selectedNodeId: null, executionError: null, executionContext: null, nodeResultCache: new Map() });
       },
 
       undo: () => {
@@ -232,8 +233,8 @@ export const useWorkflowStore = create<WorkflowState>()(
         set({ history: newHistory, historyIndex: newHistory.length - 1 });
       },
 
-      runWorkflow: async (sequences: BioSequence[]) => {
-        const { nodes, edges } = get();
+      runWorkflow: async (sequences: BioSequence[], changedNodeIds?: string[]) => {
+        const { nodes, edges, nodeResultCache } = get();
         set({ isRunning: true, executionError: null });
 
         try {
@@ -257,9 +258,11 @@ export const useWorkflowStore = create<WorkflowState>()(
                 ),
               });
             },
+            nodeResultCache,
+            changedNodeIds,
           );
 
-          set({ isRunning: false, executionContext: ctx });
+          set({ isRunning: false, executionContext: ctx, nodeResultCache: ctx.nodeCache });
         } catch (error) {
           set({
             isRunning: false,
@@ -291,7 +294,7 @@ export const useWorkflowStore = create<WorkflowState>()(
         const { nodes, edges } = get();
         return JSON.stringify(
           {
-            version: '1.0',
+            version: '2.0',
             createdAt: new Date().toISOString(),
             nodes: nodes.map((n) => {
               const data = { ...(n.data as BioNodeData) };
@@ -423,8 +426,14 @@ export const useWorkflowStore = create<WorkflowState>()(
         }),
         edges: state.edges,
       }),
-      version: 3,
-      migrate: (persisted) => persisted,
+      version: 4,
+      migrate: (persisted: unknown) => {
+        const p = persisted as { version?: number };
+        if (p?.version === 3) {
+          return { ...(persisted as Record<string, unknown>), version: 4, nodeResultCache: [] };
+        }
+        return persisted;
+      },
     },
   ),
 );

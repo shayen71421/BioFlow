@@ -1,4 +1,4 @@
-export type NodeCategory = 'input' | 'analysis' | 'output';
+export type NodeCategory = 'input' | 'analysis' | 'advanced-analysis' | 'output';
 
 export type NodeType =
   | 'fasta-input'
@@ -10,13 +10,16 @@ export type NodeType =
   | 'reverse-complement'
   | 'alignment'
   | 'motif-search'
+  | 'restriction-enzyme'
+  | 'primer-design'
+  | 'codon-usage'
+  | 'protein-properties'
   | 'report'
   | 'csv-export'
   | 'sequence-viewer';
 
 export type NodeStatus = 'idle' | 'running' | 'complete' | 'error';
 
- 
 export interface BioNodeData extends Record<string, unknown> {
   type: NodeType;
   label: string;

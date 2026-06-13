@@ -9,9 +9,16 @@ import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
+function getNodeCategory(type: string): 'input' | 'analysis' | 'output' {
+  if (['fasta-input', 'fastq-input', 'genbank-input'].includes(type)) return 'input';
+  if (['report', 'csv-export', 'sequence-viewer'].includes(type)) return 'output';
+  return 'analysis';
+}
+
 const categoryColors: Record<string, string> = {
   input: 'bg-success/10 text-success border-success/20',
   analysis: 'bg-accent/10 text-accent border-accent/20',
+  'advanced-analysis': 'bg-[#EC4899]/10 text-[#EC4899] border-[#EC4899]/20',
   output: 'bg-danger/10 text-danger border-danger/20',
 };
 
@@ -51,14 +58,10 @@ export default function TemplatesPage() {
                   <Badge
                     className={cn(
                       'text-[9px] px-1.5 py-0',
-                      categoryColors[
-                        node.type === 'fasta-input' ? 'input' :
-                        ['report', 'csv-export', 'sequence-viewer'].includes(node.type) ? 'output' : 'analysis'
-                      ],
+                      categoryColors[getNodeCategory(node.type)],
                     )}
                   >
-                    {node.type === 'fasta-input' ? 'INPUT' :
-                     ['report', 'csv-export', 'sequence-viewer'].includes(node.type) ? 'OUTPUT' : 'ANALYSIS'}
+                    {getNodeCategory(node.type).toUpperCase()}
                   </Badge>
                   <span className="text-xs text-foreground font-medium">
                     {node.type.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}

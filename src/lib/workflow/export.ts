@@ -12,6 +12,10 @@ function getFlagForNode(type: string): { flag: string; value?: string } | null {
     case 'reverse-complement': return { flag: '--revcomp' };
     case 'alignment': return { flag: '--align' };
     case 'motif-search': return { flag: '--motif' };
+    case 'restriction-enzyme': return { flag: '--restrict' };
+    case 'primer-design': return { flag: '--primers' };
+    case 'codon-usage': return { flag: '--codon-usage' };
+    case 'protein-properties': return { flag: '--protein-prop' };
     case 'report': return { flag: '--report' };
     case 'csv-export': return { flag: '--csv' };
     case 'sequence-viewer': return { flag: '--view' };

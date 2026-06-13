@@ -1,95 +1,156 @@
 # BioFlow
 
-**Bioinformatics without the terminal.**
+Visual bioinformatics workflow builder. Drag-and-drop pipeline creation with real-time DNA/protein analysis — no backend required.
 
-BioFlow is a visual, client-side bioinformatics workflow builder. Drag, connect, and run analysis pipelines in your browser — no backend, no CLI, no setup.
-
-![Next.js](https://img.shields.io/badge/Next.js_16-000?logo=next.js) ![TypeScript](https://img.shields.io/badge/TypeScript_strict-3178C6?logo=typescript) ![Tailwind v4](https://img.shields.io/badge/Tailwind_v4-0F172A?logo=tailwindcss) ![React Flow](https://img.shields.io/badge/React_Flow-FF0072?logo=react) ![Zustand](https://img.shields.io/badge/Zustand-433E38?logo=react)
+Built with **Next.js 15** (App Router), **React Flow**, **TypeScript**, **Zustand**, **Tailwind v4**, and **shadcn/ui**. Runs entirely in the browser as static assets.
 
 ---
-
-## Features
-
-- **Visual Workflow Builder** — drag-and-drop nodes onto a React Flow canvas, connect them, and run a DAG pipeline in-browser.
-- **Sequence Explorer (BioDrop)** — load FASTA files, explore sequences with colored nucleotides, find ORFs (6-frame), translate DNA, chart GC content, view codon usage, reverse-complement.
-- **Pre-built Templates** — start from one of three ready-made workflows (FASTA Exploration, Protein Translation, Genome Overview).
-- **Sample Data** — three built-in examples: E. coli K12 (~10k bp), SARS-CoV-2 spike (~3.8k bp), BRCA1 region (~5.6k bp).
-- **Export** — download workflows as `.bioflow.json`, export results as CSV/JSON/Markdown, or generate CLI commands for offline use.
-- **12 Node Types** — FASTA/FASTQ/GenBank input, GC content, ORF finder, translation, reverse complement, alignment, motif search, report, CSV export, sequence viewer.
-- **Pure Client-Side** — no backend, no database. Deploy as static assets to Vercel or any static host.
-
-## Routes
-
-| Path | Page |
-|---|---|
-| `/` | Landing page with hero, features, sample playground |
-| `/dashboard/workflow` | Workflow builder (canvas) |
-| `/dashboard/biodrop` | Sequence explorer |
-| `/dashboard/templates` | Pre-built pipeline templates |
-| `/dashboard/docs` | Bioinformatics guides |
 
 ## Quick Start
 
 ```sh
 npm install
 npm run dev
+# → http://localhost:3000
 ```
 
-Open [localhost:3000](http://localhost:3000). No API keys, no database, no setup.
-
-## Scripts
-
-| Command | Action |
+| Command | Description |
 |---|---|
-| `npm run dev` | Start dev server |
+| `npm run dev` | Dev server |
 | `npm run build` | Production build |
-| `npm run typecheck` | TypeScript strict check (`tsc --noEmit`) |
+| `npm run typecheck` | TypeScript check (CI enforces) |
 | `npm run lint` | ESLint |
-| `npm run lint:fix` | ESLint auto-fix |
-| `npm run format` | Prettier format |
+| `npm run format` | Prettier |
 
-Commits require [conventional commit](https://www.conventionalcommits.org/) messages (`feat:`, `fix:`, `docs:`, etc.). Pre-commit runs `lint:fix` + `typecheck` on staged files.
+---
 
-## Tech Stack
+## Features
 
-- **Frameowrk**: Next.js 16, App Router, TypeScript strict
-- **Styling**: Tailwind v4, custom dark palette
-- **Canvas**: React Flow 12 (@xyflow/react)
-- **State**: Zustand 5 (3 stores — workflow, sequence, UI)
-- **Charts**: Recharts
-- **Animations**: Framer Motion, GSAP (landing)
-- **Forms**: React Hook Form + Zod
-- **Fonts**: Geist (UI), JetBrains Mono (sequences)
-- **Tooling**: ESLint, Prettier, Husky, lint-staged, commitlint
+### Workflow Builder
+- **16 node types** across 4 categories: Input, Analysis, Advanced Analysis, Output
+- Drag-and-drop canvas with React Flow
+- **15 pre-built templates** to start from
+- DAG-based execution with topological sort, caching, and partial reruns
+- Undo/redo with full history stack
+- Command palette (Space or `A` key)
+
+### Bioinformatics Analysis (all in-browser, pure TypeScript)
+| Node | Analysis |
+|---|---|
+| **FASTA Input** | Load single/multi-record FASTA files |
+| **FASTQ Input** | Parse FASTQ reads with quality scores |
+| **GenBank Input** | Parse GenBank files with annotated features |
+| **GC Content** | Overall GC%, AT%, per-window sliding |
+| **ORF Finder** | Open reading frames in all 6 frames |
+| **Translation** | DNA → protein (standard + alternative tables) |
+| **Reverse Complement** | Generate reverse complement |
+| **Alignment** | Needleman-Wunsch global pairwise alignment |
+| **Motif Search** | Regex pattern search in sequences |
+| **Restriction Enzymes** | Cut site detection (200+ enzymes) |
+| **Primer Design** | PCR primer pair generation with Tm calculation |
+| **Codon Usage** | Codon frequency, RSCU, preferred/rare codons |
+| **Protein Properties** | MW, pI, extinction coefficient, instability, charge |
+| **Report** | Summary report of all upstream results |
+| **Sequence Viewer** | Scrollable base viewer with highlights |
+| **CSV Export** | Export tabular results to CSV |
+
+### Visualization
+- **Genome Map** — Interactive SVG tracks for ORFs, features, motifs, restriction cuts, primers (zoom/pan/tooltip)
+- **Virtualized Sequence Viewer** — Smooth scrolling for sequences up to 10M+ bp with base coloring and annotations
+- **BioDrop** — Sequence viewer with ORF, GC, translation, export tools
+- **Nucleotide coloring** — A (green), T (red), G (amber), C (blue)
+
+### Projects & Persistence
+- **Project management** — Create, name, save, load, delete projects
+- **Export/import** — Share workflows as `.bioflow.json` files
+- **Auto-save** — Workflow state persisted to `localStorage`
+- **Smart partialize** — Strips large sequence data on save; handles `QuotaExceededError` gracefully
+
+### Templates (15 pre-built)
+FASTA Exploration, Protein Translation, Genome Overview, Primer Design, Restriction Analysis, Motif Discovery, Protein Analysis, Codon Usage Analysis, FASTQ Quality Analysis, GenBank Feature Viewer, Reverse Complement, Pairwise Alignment, Comprehensive Analysis, Cloning Preparation
+
+### Additional
+- Dark mode only (custom palette)
+- Keyboard shortcuts: `Space`/`A` for command palette, `⌘Z` undo, `⌘⇧Z` redo
+- Selective update: only rerun downstream nodes on change
+- Execution caching with cache invalidation on config change
+
+---
 
 ## Architecture
 
-All bioinformatics run in the browser via pure-TypeScript modules:
-
-- `src/lib/bio/fasta-parser` — Parse/format FASTA
-- `src/lib/bio/orf-finder` — 6-frame ORF discovery
-- `src/lib/bio/translation` — DNA → protein (standard table)
-- `src/lib/bio/gc-content` — Sliding-window GC analysis
-- `src/lib/bio/reverse-complement` — Reverse/complement
-- `src/lib/bio/codon-usage` — Frequency analysis & stats
-
-Workflow execution does a DAG topological sort and dispatches the appropriate bio function per node, passing results along edges.
-
-## Deployment
-
-```sh
-npm run build
+```
+src/
+├── app/                    # Next.js App Router pages
+│   └── dashboard/
+│       ├── workflow/       # Workflow builder (React Flow canvas)
+│       ├── biodrop/        # Sequence explorer
+│       ├── templates/      # Template browser
+│       └── docs/           # Bioinformatics explainers
+├── components/
+│   ├── workflow/           # Canvas, nodes, panels, palette
+│   ├── genome-map/         # Interactive genome visualization
+│   ├── projects/           # Project dashboard
+│   ├── sequence/           # Virtualized sequence viewer
+│   └── ui/                 # Shared UI components
+├── lib/
+│   ├── bio/                # Pure-TypeScript bioinformatics functions
+│   │   ├── orf-finder.ts
+│   │   ├── gc-content.ts
+│   │   ├── translation.ts
+│   │   ├── reverse-complement.ts
+│   │   ├── needleman-wunsch.ts
+│   │   ├── motif-search.ts
+│   │   ├── restriction-enzymes.ts
+│   │   ├── primer-design.ts
+│   │   ├── codon-usage.ts
+│   │   ├── protein-properties.ts
+│   │   ├── fastq-parser.ts
+│   │   └── genbank-parser.ts
+│   └── workflow/           # Execution engine, validation, templates, export
+├── store/                  # Zustand stores
+│   ├── workflow-store.ts   # Nodes, edges, history, execution, persistence
+│   ├── sequence-store.ts   # FASTA data, analysis results
+│   ├── project-store.ts    # Project management
+│   └── ui-store.ts         # Sidebar, panels, palette state
+└── types/                  # TypeScript type definitions
 ```
 
-Output is in `out/` — deploy static files to Vercel, Netlify, or any CDN.
-
-## Workflow Node Types
-
-| Category | Nodes |
+### Stores
+| Store | Purpose |
 |---|---|
-| Input | FASTA Input, FASTQ Input, GenBank Input |
-| Analysis | GC Content, ORF Finder, Translation, Reverse Complement, Alignment, Motif Search |
-| Output | Report, CSV Export, Sequence Viewer |
+| `workflow-store` | Nodes/edges, history, execution, localStorage persistence |
+| `sequence-store` | Sequence data, analysis results |
+| `project-store` | Project CRUD, export/import |
+| `ui-store` | Sidebar, panels, command palette |
+
+### Key Design Decisions
+- **`node.type`** is always `'bioNode'` (React Flow routing). Business type is in `data.type`.
+- **No backend** — all bio computations run in-browser as pure functions.
+- **DAG execution** with topological sort, selective recalc, and result caching.
+- **Storage** uses `localStorage` with `partialize` to strip large sequences. Falls back gracefully on quota errors.
+- **NCBI E-utilities** for public sequence search (no API key needed).
+
+---
+
+## Node Category Reference
+
+| Category | Color | Nodes |
+|---|---|---|
+| **Input** | Green | FASTA Input, FASTQ Input, GenBank Input |
+| **Analysis** | Blue/Amber/Purple | GC Content, ORF Finder, Translation, Reverse Complement, Alignment, Motif Search |
+| **Advanced** | Pink | Restriction Enzymes, Primer Design, Codon Usage, Protein Properties |
+| **Output** | Red | Report, CSV Export, Sequence Viewer |
+
+---
+
+## Browser Support
+
+- Chrome/Edge (full, including File System Access API for workspace folders)
+- Firefox (no workspace folder support)
+- Safari (basic support)
+
+---
 
 ## License
 
