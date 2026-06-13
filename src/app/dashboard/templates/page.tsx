@@ -35,7 +35,7 @@ export default function TemplatesPage() {
   };
 
   return (
-    <div className="flex flex-col h-full p-6">
+    <div className="flex flex-col h-full p-6 overflow-y-auto">
       <div className="mb-6">
         <h1 className="text-lg font-semibold text-foreground">Workflow Templates</h1>
         <p className="text-sm text-muted-foreground mt-1">
