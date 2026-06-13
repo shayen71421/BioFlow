@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: #0A0E17;
+  --color-surface: #111827;
+  --color-surface-hover: #1E293B;
+  --color-primary: #00D4AA;
+  --color-primary-foreground: #0A0E17;
+  --color-secondary: #3B82F6;
+  --color-accent: #8B5CF6;
+  --color-success: #22C55E;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-muted: #1E293B;
+  --color-muted-foreground: #64748B;
+  --color-border: #1E293B;
+  --color-foreground: #F1F5F9;
+  --color-card: #111827;
+  --color-card-foreground: #F1F5F9;
+  --color-popover: #111827;
+  --color-popover-foreground: #F1F5F9;
+  --color-ring: #00D4AA;
+  --color-input: #1E293B;
+  --radius: 0.5rem;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+@utility nucleotide-a {
+  color: #22C55E;
+}
+@utility nucleotide-t {
+  color: #EF4444;
+}
+@utility nucleotide-g {
+  color: #F59E0B;
+}
+@utility nucleotide-c {
+  color: #3B82F6;
+}
+@utility nucleotide-n {
+  color: #64748B;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #1E293B;
+    border-radius: 3px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+  }
+}
+
+.react-flow__background {
+  background: #0A0E17 !important;
+}
+
+.react-flow__controls-button {
+  background: #111827 !important;
+  border-color: #1E293B !important;
+  color: #F1F5F9 !important;
+  fill: #F1F5F9 !important;
+}
+
+.react-flow__minimap {
+  background: #111827 !important;
+  border: 1px solid #1E293B !important;
+  border-radius: 0.5rem !important;
+}
+
+.react-flow__attribution {
+  display: none !important;
+}
+
+.react-flow__node {
+  cursor: grab;
+}
+
+.react-flow__handle {
+  width: 10px !important;
+  height: 10px !important;
+  background: #00D4AA !important;
+  border: 2px solid #0A0E17 !important;
+}
+
+.react-flow__edge-path {
+  stroke-width: 2;
+}
