@@ -48,7 +48,7 @@ export function FastaInputLoader({ nodeId, currentData }: FastaInputLoaderProps)
   const workspaceRef = useRef<FileSystemDirectoryHandle | null>(null);
   const updateNodeData = useWorkflowStore((s) => s.updateNodeData);
 
-  const pickWorkspace = async () => {
+  const pickWorkspace = useCallback(async () => {
     if (!('showDirectoryPicker' in window)) {
       toast.error('Workspace folders require Chrome, Edge, or Opera');
       return;
@@ -61,9 +61,9 @@ export function FastaInputLoader({ nodeId, currentData }: FastaInputLoaderProps)
     } catch {
       // user cancelled the picker
     }
-  };
+  }, [setWorkspaceName]);
 
-  const saveToWorkspace = async (seqs: BioSequence[]) => {
+  const saveToWorkspace = useCallback(async (seqs: BioSequence[]) => {
     if (!workspaceRef.current) {
       await pickWorkspace();
       if (!workspaceRef.current) return;
@@ -75,21 +75,21 @@ export function FastaInputLoader({ nodeId, currentData }: FastaInputLoaderProps)
       await writable.write(formatFasta(seqs));
       await writable.close();
       toast.success(`Saved to workspace: ${name}`);
-    } catch (e) {
+    } catch {
       toast.error('Failed to save to workspace — permission may have been revoked');
       workspaceRef.current = null;
       setWorkspaceName(null);
     }
-  };
+  }, [pickWorkspace, setWorkspaceName]);
 
-  const storeSequence = (seqs: BioSequence[], saveToWs = false) => {
+  const storeSequence = useCallback((seqs: BioSequence[], saveToWs = false) => {
     updateNodeData(nodeId, {
       config: { sequenceData: seqs },
       results: seqs,
     } as Record<string, unknown>);
     toast.success(`Loaded ${seqs[0].header} (${seqs[0].length.toLocaleString()} bp)`);
     if (saveToWs) saveToWorkspace(seqs);
-  };
+  }, [nodeId, updateNodeData, saveToWorkspace]);
 
   const fetchAndStore = async (fetchUrl: string) => {
     setFetchingUrl(true);
@@ -118,18 +118,7 @@ export function FastaInputLoader({ nodeId, currentData }: FastaInputLoaderProps)
     else if (e.type === 'dragleave') setDragging(false);
   }, []);
 
-  const handleDrop = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setDragging(false);
-    Array.from(e.dataTransfer.files).forEach(handleFile);
-  }, [nodeId]);
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    Array.from(e.target.files || []).forEach(handleFile);
-    e.target.value = '';
-  };
-
-  const handleFile = (file: File) => {
+  const handleFile = useCallback((file: File) => {
     if (!/\.(fasta|fa|fna)$/i.test(file.name)) {
       toast.error('Please select a FASTA file (.fasta, .fa, .fna)');
       return;
@@ -146,6 +135,17 @@ export function FastaInputLoader({ nodeId, currentData }: FastaInputLoaderProps)
       if (workspaceRef.current) saveToWorkspace(parsed);
     };
     reader.readAsText(file);
+  }, [storeSequence, saveToWorkspace]);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    Array.from(e.dataTransfer.files).forEach(handleFile);
+  }, [handleFile]);
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    Array.from(e.target.files || []).forEach(handleFile);
+    e.target.value = '';
   };
 
   const handleDemo = (demo: typeof DEMOS[0]) => {
@@ -184,7 +184,7 @@ export function FastaInputLoader({ nodeId, currentData }: FastaInputLoaderProps)
         };
       });
       setSearchResults(results);
-    } catch (e) {
+    } catch {
       toast.error('Search failed — NCBI API may be rate-limited');
     } finally {
       setSearching(false);

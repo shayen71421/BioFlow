@@ -16,13 +16,6 @@ const iconMap: Record<string, React.FC<{ size?: number }>> = {
   AlignStartVertical, Search, FileText, Table, Eye,
 };
 
-const statusColors: Record<string, string> = {
-  idle: 'bg-muted',
-  running: 'bg-secondary animate-pulse',
-  complete: 'bg-success',
-  error: 'bg-danger',
-};
-
 const categoryBorder: Record<string, string> = {
   input: 'border-l-[3px] border-l-success',
   analysis: 'border-l-[3px] border-l-accent',

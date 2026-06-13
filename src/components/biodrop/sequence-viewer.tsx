@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useMemo, useCallback } from 'react';
+import { useRef, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { useSequenceStore } from '@/store/sequence-store';
 import { ScrollArea } from '@/components/ui/scroll-area';

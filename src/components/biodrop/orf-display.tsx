@@ -11,8 +11,6 @@ export function OrfDisplay() {
   const [selectedOrf, setSelectedOrf] = useState<number | null>(null);
   const orfs = useSequenceStore((s) => s.orfs);
   const seq = useSequenceStore((s) => s.getActiveSequence());
-  const stats = useSequenceStore((s) => s.stats);
-
   if (!seq || orfs.length === 0) {
     return (
       <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">

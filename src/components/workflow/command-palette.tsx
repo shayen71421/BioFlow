@@ -55,24 +55,32 @@ export function CommandPalette() {
 
   useEffect(() => {
     if (open) {
-      setQuery('');
-      setSelectedIndex(0);
       setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [open]);
+
+  const openPalette = useCallback(() => {
+    setQuery('');
+    setSelectedIndex(0);
+    setOpen(true);
+  }, [setOpen]);
+
+  const closePalette = useCallback(() => {
+    setOpen(false);
+  }, [setOpen]);
 
   const handleSelect = useCallback(
     (type: NodeType) => {
       pushHistory();
       addNode(type);
-      setOpen(false);
+      closePalette();
     },
-    [addNode, setOpen, pushHistory],
+    [addNode, closePalette, pushHistory],
   );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Escape') {
-      setOpen(false);
+      closePalette();
       return;
     }
     if (e.key === 'ArrowDown') {
@@ -106,19 +114,20 @@ export function CommandPalette() {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
       if (e.code === 'Space' || e.key === 'a') {
         e.preventDefault();
-        setOpen(!open);
+        if (open) closePalette();
+        else openPalette();
       }
     };
     window.addEventListener('keydown', handleGlobalKey);
     return () => window.removeEventListener('keydown', handleGlobalKey);
-  }, [open, setOpen]);
+  }, [open, openPalette, closePalette]);
 
   if (!open) return null;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] bg-black/60 backdrop-blur-sm"
-      onClick={() => setOpen(false)}
+      onClick={closePalette}
     >
       <div
         className="w-full max-w-lg rounded-xl border border-border bg-surface shadow-2xl overflow-hidden"
@@ -146,7 +155,7 @@ export function CommandPalette() {
               <div className={cn('px-2 py-1.5 text-[11px] font-semibold', categoryConfig[category as NodeCategory]?.color)}>
                 {categoryConfig[category as NodeCategory]?.label}
               </div>
-              {items.map((def, idx) => {
+              {items.map((def) => {
                 const globalIdx = allItems.indexOf(def);
                 const Icon = iconMap[def.icon as keyof typeof iconMap];
                 return (

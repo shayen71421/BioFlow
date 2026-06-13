@@ -76,7 +76,6 @@ function WorkflowEmptyState() {
 
 export default function WorkflowPage() {
   const nodes = useWorkflowStore((s) => s.nodes);
-  const savedWorkflows = useWorkflowStore((s) => s.savedWorkflows);
   const toolbarRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x: 16, y: 16 });
   const [dragging, setDragging] = useState(false);

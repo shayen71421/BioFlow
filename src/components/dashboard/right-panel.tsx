@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { X, FileText, Download, FileJson, FileSpreadsheet } from 'lucide-react';
+import { X, FileText, FileJson, FileSpreadsheet } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUIStore } from '@/store/ui-store';
 import { useWorkflowStore } from '@/store/workflow-store';

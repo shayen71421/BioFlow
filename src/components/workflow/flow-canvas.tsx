@@ -30,7 +30,6 @@ export function FlowCanvas() {
   const onNodesChange = useWorkflowStore((s) => s.onNodesChange);
   const onEdgesChange = useWorkflowStore((s) => s.onEdgesChange);
   const onConnect = useWorkflowStore((s) => s.onConnect);
-  const addNode = useWorkflowStore((s) => s.addNode);
   const setSelectedNode = useWorkflowStore((s) => s.setSelectedNode);
   const removeNode = useWorkflowStore((s) => s.removeNode);
   const duplicateNode = useWorkflowStore((s) => s.duplicateNode);

@@ -12,7 +12,6 @@ import { useUIStore } from '@/store/ui-store';
 
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const loadExample = useSequenceStore((s) => s.loadExample);
   const setActiveSidebarItem = useUIStore((s) => s.setActiveSidebarItem);

@@ -2,12 +2,11 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import {
-  Workflow, Dna, FlaskConical, LayoutTemplate, BookOpen, ChevronLeft,
+  Workflow, Dna, LayoutTemplate, BookOpen, ChevronLeft,
   PanelRightOpen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUIStore, type SidebarItem } from '@/store/ui-store';
-import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
 
 const primaryNav: { id: SidebarItem; icon: React.FC<{ size?: number }>; label: string; path: string }[] = [

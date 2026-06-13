@@ -5,7 +5,6 @@ import { Upload, Dna, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSequenceStore } from '@/store/sequence-store';
 import { E_COLI_K12 } from '@/data/examples/ecoli-k12';
-import { formatFasta } from '@/lib/bio/fasta-parser';
 import { toast } from 'sonner';
 
 export function DropZone() {
@@ -25,23 +24,7 @@ export function DropZone() {
     }
   }, []);
 
-  const handleDrop = useCallback(
-    (e: React.DragEvent) => {
-      e.preventDefault();
-      setDragging(false);
-      const files = Array.from(e.dataTransfer.files);
-      handleFiles(files);
-    },
-    [loadFasta],
-  );
-
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    handleFiles(files);
-    e.target.value = '';
-  };
-
-  const handleFiles = (files: File[]) => {
+  const handleFiles = useCallback((files: File[]) => {
     const fastaFile = files.find((f) =>
       /\.(fasta|fa|fna)$/i.test(f.name),
     );
@@ -56,6 +39,22 @@ export function DropZone() {
       toast.success(`Loaded ${fastaFile.name}`);
     };
     reader.readAsText(fastaFile);
+  }, [loadFasta]);
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent) => {
+      e.preventDefault();
+      setDragging(false);
+      const files = Array.from(e.dataTransfer.files);
+      handleFiles(files);
+    },
+    [handleFiles],
+  );
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    handleFiles(files);
+    e.target.value = '';
   };
 
   const handleLoadDemo = () => {

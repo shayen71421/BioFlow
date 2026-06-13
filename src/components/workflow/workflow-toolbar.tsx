@@ -1,7 +1,7 @@
 'use client';
 
 import {
-  Play, Download, Upload, Trash2, Save, Image, Code,
+  Play, Download, Upload, Trash2, Save, ImageIcon, Code,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
@@ -114,7 +114,7 @@ export function WorkflowToolbar() {
 
       <Tooltip content="Export as Image">
         <Button size="sm" variant="ghost" onClick={handleExportImage}>
-          <Image size={14} />
+          <ImageIcon size={14} />
         </Button>
       </Tooltip>
 
