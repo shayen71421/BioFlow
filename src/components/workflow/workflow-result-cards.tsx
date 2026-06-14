@@ -8,6 +8,10 @@ import type {
 } from '@/types/sequence';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
+import {
+  AlignmentEvidence, ORFEvidence, MotifEvidence,
+  RestrictionEvidence, PrimerEvidence, EvidencePanel,
+} from './evidence-view';
 
 const BASE_COLORS: Record<string, string> = {
   A: 'text-[#22C55E]', T: 'text-[#EF4444]',
@@ -101,15 +105,18 @@ function ORFResultCard({ result }: { result: ORF[] }) {
         <div key={i} className="rounded-lg bg-background p-2 space-y-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-mono text-warning">{orf.frame > 2 ? `-${orf.frame - 3}` : `+${orf.frame}`}/{orf.strand}</span>
-            <span className="text-[10px] text-muted-foreground">{orf.start}–{orf.end}</span>
+            <span className="text-[10px] text-muted-foreground">{orf.start + 1}–{orf.end}</span>
           </div>
           <div className="h-1.5 rounded-full bg-surface overflow-hidden">
             <div className="h-full rounded-full bg-success" style={{ width: `${(orf.lengthBp / maxLen) * 100}%` }} />
           </div>
           <div className="flex justify-between text-[10px]">
             <span className="text-foreground font-mono">{orf.lengthBp} bp / {orf.lengthAa} aa</span>
-            <span className="text-muted-foreground font-mono">{orf.protein.slice(0, 20)}...</span>
+            <span className="text-muted-foreground font-mono">{orf.protein.slice(0, 20)}</span>
           </div>
+          <EvidencePanel label="Show Evidence">
+            <ORFEvidence orf={orf} />
+          </EvidencePanel>
         </div>
       ))}
       {result.length > 10 && <p className="text-[10px] text-muted-foreground">+{result.length - 10} more</p>}
@@ -159,12 +166,9 @@ function AlignmentResultCard({ result }: { result: AlignmentResult }) {
         <StatCard label="Gaps" value={result.gaps.toLocaleString()} color="text-warning" />
         <StatCard label="Openings" value={result.gapOpenings.toLocaleString()} />
       </div>
-      <div className="rounded-lg bg-background p-2 font-mono text-[9px] leading-relaxed break-all max-h-32 overflow-y-auto">
-        <div className="text-success text-[10px] font-semibold mb-1">Aligned:</div>
-        <div className="text-success">{result.aligned1.slice(0, 200)}</div>
-        <div className="text-muted-foreground">{result.aligned2.slice(0, 200)}</div>
-        {result.aligned1.length > 200 && <div className="text-[9px] text-muted-foreground mt-1">… truncated ({result.aligned1.length} total positions)</div>}
-      </div>
+      <EvidencePanel label="Show Evidence">
+        <AlignmentEvidence result={result} />
+      </EvidencePanel>
     </div>
   );
 }
@@ -184,6 +188,11 @@ function MotifResultCard({ result }: { result: MotifResult }) {
         </div>
       ))}
       {result.matches.length > 5 && <p className="text-[10px] text-muted-foreground">+{result.matches.length - 5} more</p>}
+      {result.matches.length > 0 && (
+        <EvidencePanel label="Show Evidence">
+          <MotifEvidence result={result} />
+        </EvidencePanel>
+      )}
     </div>
   );
 }
@@ -203,6 +212,11 @@ function RestrictionResultCard({ result }: { result: RestrictionEnzymeResult }) 
           </div>
         ))}
       </div>
+      {result.cuts.length > 0 && (
+        <EvidencePanel label="Show Evidence">
+          <RestrictionEvidence result={result} />
+        </EvidencePanel>
+      )}
     </div>
   );
 }
@@ -229,6 +243,9 @@ function PrimerResultCard({ result }: { result: PrimerDesignResult }) {
             <div className="text-[9px] text-muted-foreground font-mono break-all leading-relaxed">
               {p.reverse.seq}
             </div>
+            <EvidencePanel label="Show Evidence">
+              <PrimerEvidence pair={p} />
+            </EvidencePanel>
           </div>
         ))}
       </div>
