@@ -54,7 +54,7 @@ export function GenomeMapView({
         color: '#8B5CF6',
         type: 'orf',
         strand: orf.strand,
-        detail: `${orf.length} bp, ${orf.protein.slice(0, 20)}...`,
+        detail: `${orf.lengthBp} bp, ${orf.protein.slice(0, 20)}...`,
       });
     });
 

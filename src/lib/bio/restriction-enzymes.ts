@@ -44,6 +44,7 @@ export function digestSequence(sequence: string, enzymeNames?: string[]): Restri
       cuts.push({
         enzyme: enzyme.name,
         recognitionSite: enzyme.recognition,
+        recognitionStart: match.index,
         cutPosition: cutPos,
         fragmentLength: 0,
         strand: '+',

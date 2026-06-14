@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import type { BioSequence, ORF, GCResult, TranslationResult, SequenceStats } from '@/types/sequence';
 import { parseFasta } from '@/lib/bio/fasta-parser';
-import { findORFs } from '@/lib/bio/orf-finder';
+import { findORFsInSixFrames } from '@/lib/bio/orf-finder';
 import { translate } from '@/lib/bio/translation';
 import { calculateGC } from '@/lib/bio/gc-content';
 import { reverseComplement } from '@/lib/bio/reverse-complement';
@@ -92,7 +92,7 @@ export const useSequenceStore = create<SequenceState>()((set, get) => ({
     if (!seq) return;
 
     const sequence = seq.sequence;
-    const orfs = findORFs(sequence, 30);
+    const orfs = findORFsInSixFrames(sequence, 30);
     const gcResult = calculateGC(sequence, 100);
     const translationResult = translate(sequence, [0, 1, 2]);
     const revComp = reverseComplement(sequence);
@@ -130,7 +130,7 @@ export const useSequenceStore = create<SequenceState>()((set, get) => ({
   setOrfMinLength: (min: number) => {
     const seq = get().getActiveSequence();
     if (!seq) return;
-    const orfs = findORFs(seq.sequence, min);
+    const orfs = findORFsInSixFrames(seq.sequence, min);
     set({ orfs });
   },
 

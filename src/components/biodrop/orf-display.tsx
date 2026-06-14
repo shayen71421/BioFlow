@@ -27,7 +27,7 @@ export function OrfDisplay() {
       <div className="flex items-center gap-2">
         <Badge variant="success">{orfs.length} ORFs found</Badge>
         <span className="text-xs text-muted-foreground">
-          Min length: 30 codons
+          Min length: 30 bp
         </span>
       </div>
 
@@ -54,17 +54,17 @@ export function OrfDisplay() {
             />
             <div className="flex-1 min-w-0">
               <div className="text-sm font-medium text-foreground">
-                Frame {orf.frame + 1} ({orf.strand})
+                Frame {orf.frame > 2 ? orf.frame - 3 : orf.frame} ({orf.strand})
               </div>
               <div className="text-xs text-muted-foreground font-mono">
-                {orf.start.toLocaleString()} - {orf.end.toLocaleString()} ({orf.length} bp)
+                {orf.start.toLocaleString()} - {orf.end.toLocaleString()} ({orf.lengthBp} bp / {orf.lengthAa} aa)
               </div>
               <div className="text-xs text-muted-foreground font-mono truncate mt-0.5">
                 {orf.protein.slice(0, 30)}{orf.protein.length > 30 ? '...' : ''}
               </div>
             </div>
             <div className="text-xs text-muted-foreground font-mono">
-              {orf.length / 3} AA
+              {orf.lengthAa} AA
             </div>
           </button>
         ))}
@@ -93,7 +93,7 @@ export function OrfDisplay() {
               </div>
               <div className="rounded-lg bg-background p-3">
                 <div className="text-xs text-muted-foreground mb-1">Length</div>
-                <div className="text-sm font-mono text-foreground">{selected.length} bp</div>
+                <div className="text-sm font-mono text-foreground">{selected.lengthBp} bp / {selected.lengthAa} aa</div>
               </div>
               <div className="rounded-lg bg-background p-3">
                 <div className="text-xs text-muted-foreground mb-1">Frame</div>

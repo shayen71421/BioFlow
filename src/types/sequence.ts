@@ -49,6 +49,7 @@ export interface AlignmentResult {
   identityPercent: number;
   coverage: number;
   gaps: number;
+  gapOpenings: number;
   matches: number;
   mismatches: number;
 }
@@ -70,7 +71,8 @@ export interface MotifMatch {
 export interface ORF {
   start: number;
   end: number;
-  length: number;
+  lengthBp: number;
+  lengthAa: number;
   protein: string;
   frame: number;
   strand: '+' | '-';
@@ -122,6 +124,7 @@ export interface CodonUsage {
 export interface RestrictionEnzymeCut {
   enzyme: string;
   recognitionSite: string;
+  recognitionStart: number;
   cutPosition: number;
   fragmentLength: number;
   strand: '+' | '-';

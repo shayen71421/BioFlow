@@ -9,6 +9,7 @@ export type NodeType =
   | 'translation'
   | 'reverse-complement'
   | 'alignment'
+  | 'alignment-local'
   | 'motif-search'
   | 'restriction-enzyme'
   | 'primer-design'

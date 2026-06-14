@@ -3,6 +3,7 @@
 import { Sidebar } from '@/components/dashboard/sidebar';
 import { RightPanel } from '@/components/dashboard/right-panel';
 import { CommandPalette } from '@/components/workflow/command-palette';
+import { ScientificDashboard } from '@/components/dashboard/scientific-dashboard';
 
 export default function DashboardLayout({
   children,
@@ -17,6 +18,7 @@ export default function DashboardLayout({
       </main>
       <RightPanel />
       <CommandPalette />
+      <ScientificDashboard />
     </div>
   );
 }

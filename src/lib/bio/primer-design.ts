@@ -9,7 +9,7 @@ const MAX_LENGTH = 28;
 const PRODUCT_MIN = 100;
 const PRODUCT_MAX = 2000;
 
-function calcTm(seq: string): number {
+export function calcTm(seq: string): number {
   const s = seq.toUpperCase();
   const len = s.length;
   let at = 0, gc = 0;
@@ -112,7 +112,7 @@ export function designPrimers(sequence: string): PrimerDesignResult {
 
   for (const f of forward.slice(0, 5)) {
     for (const r of reverse.slice(0, 5)) {
-      const productSize = r.start - f.end;
+      const productSize = r.end - f.start;
       if (productSize >= PRODUCT_MIN && productSize <= PRODUCT_MAX) {
         pairs.push({
           forward: f,

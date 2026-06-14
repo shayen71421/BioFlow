@@ -1,5 +1,4 @@
 import type { MotifResult, MotifMatch } from '@/types/sequence';
-import { reverseComplement } from './reverse-complement';
 
 export function searchMotif(sequence: string, motif: string, useRegex: boolean = false): MotifResult {
   const seq = sequence.toUpperCase();
@@ -9,31 +8,23 @@ export function searchMotif(sequence: string, motif: string, useRegex: boolean =
   });
 
   const matches: MotifMatch[] = [];
+  const seen = new Set<number>();
 
   try {
     const regex = new RegExp(pattern, 'g');
     let m: RegExpExecArray | null;
 
     while ((m = regex.exec(seq)) !== null) {
-      matches.push({
-        start: m.index,
-        end: m.index + m[0].length,
-        sequence: m[0],
-        strand: '+',
-      });
+      if (!seen.has(m.index)) {
+        seen.add(m.index);
+        matches.push({
+          start: m.index,
+          end: m.index + m[0].length,
+          sequence: m[0],
+          strand: '+',
+        });
+      }
       if (!regex.global) break;
-    }
-
-    const revSeq = reverseComplement(seq);
-    const revRegex = new RegExp(pattern, 'g');
-    while ((m = revRegex.exec(revSeq)) !== null) {
-      const revStart = seq.length - m.index - m[0].length;
-      matches.push({
-        start: revStart,
-        end: revStart + m[0].length,
-        sequence: m[0],
-        strand: '-',
-      });
     }
   } catch {
     return { motif, pattern, matches: [], totalMatches: 0 };

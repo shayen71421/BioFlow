@@ -3,7 +3,7 @@ import type { NodeType, ValidationResult } from '@/types/workflow';
 const INPUT_NODES: Set<NodeType> = new Set(['fasta-input', 'fastq-input', 'genbank-input']);
 const ANALYSIS_NODES: Set<NodeType> = new Set([
   'gc-content', 'orf-finder', 'translation',
-  'reverse-complement', 'alignment', 'motif-search',
+  'reverse-complement', 'alignment', 'alignment-local', 'motif-search',
 ]);
 const ADVANCED_NODES: Set<NodeType> = new Set([
   'restriction-enzyme', 'primer-design', 'codon-usage', 'protein-properties',

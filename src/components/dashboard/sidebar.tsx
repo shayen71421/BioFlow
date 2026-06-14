@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from 'next/navigation';
 import {
   Workflow, Dna, LayoutTemplate, BookOpen, ChevronLeft,
-  PanelRightOpen,
+  PanelRightOpen, TestTube,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useUIStore, type SidebarItem } from '@/store/ui-store';
@@ -16,6 +16,7 @@ const primaryNav: { id: SidebarItem; icon: React.FC<{ size?: number }>; label: s
 
 const secondaryNav: { id: SidebarItem; icon: React.FC<{ size?: number }>; label: string; path: string }[] = [
   { id: 'templates', icon: LayoutTemplate, label: 'Templates', path: '/dashboard/templates' },
+  { id: 'validation', icon: TestTube, label: 'Benchmark', path: '/dashboard/validation' },
   { id: 'docs', icon: BookOpen, label: 'Docs', path: '/dashboard/docs' },
 ];
 

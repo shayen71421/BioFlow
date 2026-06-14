@@ -10,7 +10,8 @@ function getFlagForNode(type: string): { flag: string; value?: string } | null {
     case 'translation': return { flag: '--translate' };
     case 'gc-content': return { flag: '--gc' };
     case 'reverse-complement': return { flag: '--revcomp' };
-    case 'alignment': return { flag: '--align' };
+    case 'alignment': return { flag: '--align-global' };
+    case 'alignment-local': return { flag: '--align-local' };
     case 'motif-search': return { flag: '--motif' };
     case 'restriction-enzyme': return { flag: '--restrict' };
     case 'primer-design': return { flag: '--primers' };

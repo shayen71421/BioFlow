@@ -28,11 +28,13 @@ export function findORFs(sequence: string, minLength: number = 30): ORF[] {
             const orfLength = end - start;
 
             if (orfLength >= minLength) {
-              const protein = translateORF(seq.slice(start, end));
+              const raw = translateORF(seq.slice(start, end));
+              const protein = raw.slice(0, -1);
               orfs.push({
                 start,
                 end,
-                length: orfLength,
+                lengthBp: orfLength,
+                lengthAa: Math.floor(orfLength / 3) - 1,
                 protein,
                 frame,
                 strand: '+',

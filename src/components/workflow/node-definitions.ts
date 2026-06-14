@@ -59,11 +59,19 @@ export const NODE_DEFINITIONS: NodeDefinition[] = [
   },
   {
     type: 'alignment',
-    label: 'Alignment',
-    description: 'Pairwise sequence alignment (Needleman-Wunsch)',
+    label: 'Global Alignment',
+    description: 'Needleman-Wunsch global pairwise alignment',
     icon: 'AlignStartVertical',
     category: 'analysis',
     color: '#8B5CF6',
+  },
+  {
+    type: 'alignment-local',
+    label: 'Local Alignment',
+    description: 'Smith-Waterman local pairwise alignment',
+    icon: 'AlignStartVertical',
+    category: 'analysis',
+    color: '#06B6D4',
   },
   {
     type: 'motif-search',

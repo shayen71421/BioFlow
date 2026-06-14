@@ -122,7 +122,7 @@ function renderResults(nodeData: BioNodeData) {
       <>
         <div className="text-success">{orfs.length} ORF{orfs.length !== 1 ? 's' : ''} found</div>
         <div className="text-muted-foreground">
-          Longest: {(Math.max(...orfs.map((o) => o.length))).toLocaleString()} aa
+          Longest: {(Math.max(...orfs.map((o) => o.lengthAa))).toLocaleString()} aa
         </div>
       </>
     );
@@ -158,6 +158,15 @@ function renderResults(nodeData: BioNodeData) {
       <>
         <div className="text-success">Score: {al.score}</div>
         <div className="text-muted-foreground">Identity: {al.identityPercent.toFixed(1)}%</div>
+        <div className="mt-1 font-mono text-[8px] leading-tight break-all text-success">
+          {al.aligned1.slice(0, 60)}
+        </div>
+        <div className="font-mono text-[8px] leading-tight break-all text-muted-foreground">
+          {al.aligned2.slice(0, 60)}
+        </div>
+        {al.aligned1.length > 60 && (
+          <div className="text-[8px] text-muted-foreground">… {al.gaps} gaps, {al.matches}/{al.mismatches} M/MM</div>
+        )}
       </>
     );
   }
@@ -212,6 +221,17 @@ function renderResults(nodeData: BioNodeData) {
         <div className="text-muted-foreground">pI: {pp.isoelectricPoint.toFixed(2)}</div>
       </>
     );
+  }
+
+  if (nodeData.type === 'sequence-viewer' && typeof r === 'object' && r !== null && 'upstream' in r) {
+    const upstream = (r as { upstream: unknown[] }).upstream;
+    const seqData = upstream.find(
+      (u) => Array.isArray(u) && u.length > 0 && typeof u[0] === 'object' && 'header' in (u[0] as Record<string, unknown>),
+    ) as BioSequence[] | undefined;
+    if (seqData && seqData.length > 0) {
+      return <div className="text-success">{seqData[0].length.toLocaleString()} bp loaded</div>;
+    }
+    return <div className="text-warning">Results from {upstream.length} upstream node(s)</div>;
   }
 
   if (typeof r === 'object' && r !== null && 'upstream' in r) {

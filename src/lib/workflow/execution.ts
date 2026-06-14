@@ -1,11 +1,12 @@
 import type { Node, Edge } from '@xyflow/react';
-import type { BioSequence, FASTQRead } from '@/types/sequence';
+import type { BioSequence, FASTQRead, TranslationResult } from '@/types/sequence';
 import type { BioNodeData } from '@/types/workflow';
-import { findORFs } from '@/lib/bio/orf-finder';
+import { findORFsInSixFrames } from '@/lib/bio/orf-finder';
 import { translate } from '@/lib/bio/translation';
 import { calculateGC } from '@/lib/bio/gc-content';
 import { reverseComplement } from '@/lib/bio/reverse-complement';
 import { needlemanWunsch } from '@/lib/bio/needleman-wunsch';
+import { smithWaterman } from '@/lib/bio/smith-waterman';
 import { searchMotif, searchCGRich } from '@/lib/bio/motif-search';
 import { analyzeFASTQ } from '@/lib/bio/fastq-parser';
 import { digestSequence } from '@/lib/bio/restriction-enzymes';
@@ -120,7 +121,7 @@ export async function executeWorkflow(
         }
         case 'orf-finder': {
           const minLen = (data.config?.minOrfLength as number) || 30;
-          result = seq ? findORFs(seq, minLen) : [];
+          result = seq ? findORFsInSixFrames(seq, minLen) : [];
           break;
         }
         case 'translation': {
@@ -143,6 +144,18 @@ export async function executeWorkflow(
           const gap = (data.config?.gapPenalty as number) || -2;
           if (seq && seq2) {
             result = needlemanWunsch(seq, seq2, match, mismatch, gap);
+          } else {
+            result = { error: 'Need two sequences for alignment' };
+          }
+          break;
+        }
+        case 'alignment-local': {
+          const seq2 = data.config?.sequence2 as string || '';
+          const match = (data.config?.matchScore as number) || 2;
+          const mismatch = (data.config?.mismatchScore as number) || -1;
+          const gap = (data.config?.gapPenalty as number) || -2;
+          if (seq && seq2) {
+            result = smithWaterman(seq, seq2, match, mismatch, gap);
           } else {
             result = { error: 'Need two sequences for alignment' };
           }
@@ -178,12 +191,19 @@ export async function executeWorkflow(
           break;
         }
         case 'protein-properties': {
-          result = seq ? calculateProteinProperties(seq) : null;
+          const translationInput = inputResults.find(
+            (r) => typeof r === 'object' && r !== null && 'frames' in r,
+          ) as TranslationResult | undefined;
+          const proteinSeq = translationInput?.frames?.[0]?.aa || seq;
+          result = proteinSeq ? calculateProteinProperties(proteinSeq) : null;
+          break;
+        }
+        case 'sequence-viewer': {
+          result = { upstream: inputResults };
           break;
         }
         case 'report':
-        case 'csv-export':
-        case 'sequence-viewer': {
+        case 'csv-export': {
           result = { upstream: inputResults };
           break;
         }
