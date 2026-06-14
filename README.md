@@ -60,6 +60,12 @@ npm run dev
 - **Virtualized Sequence Viewer** — Smooth scrolling for sequences up to 10M+ bp with base coloring, annotations, and position markers
 - **BioDrop** — Dedicated sequence explorer with ORF browser, GC distribution, translation viewer, and export
 - **Nucleotide coloring** — A (#22C55E green), T (#EF4444 red), G (#F59E0B amber), C (#3B82F6 blue)
+- **Provenance Evidence Views** — Collapsible inline evidence for every analysis result:
+  - **Alignment**: Color-coded match (green) / mismatch (red) / gap (indigo) with pipe indicators, grouped in 60-char blocks (BLAST/Jalview style)
+  - **ORF**: Sequence context with start/stop codon highlighting, visual span bar, and translated protein
+  - **Motif**: Context-flanked matches with highlighted bases and coordinates
+  - **Restriction**: Cut site markers on sequence with enzyme labels and cut position indicators
+  - **Primer**: Forward/reverse primer overlays with directional arrows (►/◄), highlighted binding regions, and product span with size label
 
 ### Projects & Persistence
 - **Project management** — Create, name, save, load, delete projects
@@ -95,7 +101,7 @@ src/
 │       ├── templates/      # Template browser
 │       └── docs/           # Bioinformatics explainers
 ├── components/
-│   ├── workflow/           # Canvas, nodes, panels, palette, result cards
+│   ├── workflow/           # Canvas, nodes, panels, palette, result cards, evidence views
 │   ├── genome-map/         # Interactive genome visualization
 │   ├── biodrop/            # BioDrop sequence viewer panes
 │   ├── projects/           # Project dashboard and management
