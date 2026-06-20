@@ -11,91 +11,67 @@ import { TemplatesShowcase } from './templates-showcase';
 import { DnaTicker } from './dna-ticker';
 import { PlaygroundCards } from '@/components/genome-playground/playground-cards';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, GitFork, ShieldCheck, FlaskConical, Dna } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Dna, Search, BarChart3, ArrowRightToLine, Scissors, FlaskConical } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const stats = [
-  { value: '16', label: 'NODE_TYPES', icon: GitFork, color: 'text-[#3B82F6]' },
-  { value: '42+', label: 'BENCHMARK_TESTS', icon: ShieldCheck, color: 'text-[#22C55E]' },
-  { value: '15', label: 'TOPOLOGY_TEMPLATES', icon: FlaskConical, color: 'text-[#8B5CF6]' },
-  { value: '100%', label: 'BROWSER_LOCAL', icon: Dna, color: 'text-[#F59E0B]' },
+const capabilityNodes = [
+  { icon: Dna, label: 'FASTA Input', color: 'text-[#22C55E]', bg: 'bg-[#22C55E]/10', border: 'border-[#22C55E]/30' },
+  { icon: Search, label: 'ORF Finder', color: 'text-[#3B82F6]', bg: 'bg-[#3B82F6]/10', border: 'border-[#3B82F6]/30' },
+  { icon: ArrowRightToLine, label: 'Translation', color: 'text-[#F59E0B]', bg: 'bg-[#F59E0B]/10', border: 'border-[#F59E0B]/30' },
+  { icon: BarChart3, label: 'GC Content', color: 'text-[#8B5CF6]', bg: 'bg-[#8B5CF6]/10', border: 'border-[#8B5CF6]/30' },
+  { icon: Scissors, label: 'Restriction', color: 'text-[#EF4444]', bg: 'bg-[#EF4444]/10', border: 'border-[#EF4444]/30' },
+  { icon: FlaskConical, label: 'Primer Design', color: 'text-[#EC4899]', bg: 'bg-[#EC4899]/10', border: 'border-[#EC4899]/30' },
 ];
 
 export function LandingPageClient() {
   const router = useRouter();
-  const statsRef = useRef<HTMLDivElement>(null);
+  const pipelineRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.fromTo(
-        '.stat-item',
-        { opacity: 0, y: 15 },
+        '.cap-node',
+        { opacity: 0, scale: 0.8 },
         {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          stagger: 0.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: statsRef.current,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
+          opacity: 1, scale: 1, duration: 0.4, stagger: 0.08, ease: 'back.out(1.7)',
+          scrollTrigger: { trigger: pipelineRef.current, start: 'top 85%', toggleActions: 'play none none reverse' },
         }
       );
-    }, statsRef);
+    }, pipelineRef);
     return () => ctx.revert();
   }, []);
 
-  // Visual connection pipeline line between sections
-  const renderPipelineConnector = (fromColor: string, toColor: string) => {
-    return (
-      <div className="flex justify-center py-10 select-none pointer-events-none">
-        <div
-          className="h-20 w-[1.5px] relative"
-          style={{
-            background: `linear-gradient(to bottom, ${fromColor}, ${toColor})`,
-          }}
-        >
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-3.5 w-3.5 rounded-full border border-border bg-[#0A0E17] flex items-center justify-center">
-            <div
-              className="h-1.5 w-1.5 rounded-full"
-              style={{ backgroundColor: fromColor }}
-            />
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="min-h-screen bg-[#0A0E17] text-foreground font-sans relative overflow-x-hidden selection:bg-[#22C55E]/30 selection:text-white">
-      {/* Signature horizontal sequencer ticker at the top */}
       <DnaTicker className="border-t-0" />
-
-      {/* Hero Section */}
       <Hero />
 
-      {/* Stats Monospace readout Panel */}
-      <section ref={statsRef} className="px-4 py-8 border-y border-border/60 bg-[#0B0F19]/40">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
-          {stats.map((stat) => (
-            <div key={stat.label} className="stat-item text-center flex flex-col items-center justify-center p-4 border border-border/20 rounded bg-[#070A10]/60">
-              <stat.icon size={18} className={`${stat.color} mb-2`} />
-              <div className="text-xl md:text-2xl font-mono font-bold tracking-tight text-foreground">
-                {stat.value}
+      {/* Capability Pipeline — replaces stats row */}
+      <section ref={pipelineRef} className="px-4 py-10 border-y border-border/60 bg-[#0B0F19]/40">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center mb-6">
+            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+              Core_Capability_Pipeline
+            </span>
+          </div>
+          <div className="flex flex-wrap justify-center gap-3">
+            {capabilityNodes.map((node, i) => (
+              <div key={node.label} className="flex items-center gap-0">
+                <div className={`cap-node flex items-center gap-2 rounded-lg border ${node.border} ${node.bg} px-3 py-2`}>
+                  <node.icon size={14} className={node.color} />
+                  <span className="font-mono text-[11px] font-semibold text-foreground tracking-wide">{node.label}</span>
+                </div>
+                {i < capabilityNodes.length - 1 && (
+                  <div className="w-4 flex items-center justify-center">
+                    <div className="w-2 h-[1.5px] bg-gradient-to-r from-foreground/20 to-foreground/5" />
+                  </div>
+                )}
               </div>
-              <div className="text-[9px] font-mono text-muted-foreground mt-1 tracking-wider uppercase">
-                {stat.label}
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
-
-      {/* Connector: Green to Blue */}
-      {renderPipelineConnector('#22C55E', '#3B82F6')}
 
       {/* What it Does & How it Works Sections */}
       <section className="px-4 py-10">
@@ -104,16 +80,12 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* Ticker separator */}
       <DnaTicker className="my-16" />
 
       {/* Templates Showcase */}
       <section className="px-4 py-10">
         <TemplatesShowcase />
       </section>
-
-      {/* Connector: Pink to Red */}
-      {renderPipelineConnector('#EC4899', '#EF4444')}
 
       {/* CTA / Sandbox Workspace */}
       <section className="px-4 py-20 bg-[#0B0F19]/25 border-y border-border/40">
@@ -138,9 +110,7 @@ export function LandingPageClient() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
             <Button
               variant="outline"
-              onClick={() => {
-                router.push('/dashboard/workflow');
-              }}
+              onClick={() => { router.push('/dashboard/workflow'); }}
               className="font-mono text-xs border-border hover:border-[#22C55E] hover:bg-[#22C55E]/10 hover:text-[#22C55E] gap-2 px-6"
             >
               START_BLANK_TOPOLOGY <ArrowRight size={12} />
@@ -149,7 +119,6 @@ export function LandingPageClient() {
         </div>
       </section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
