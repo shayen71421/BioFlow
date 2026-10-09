@@ -85,7 +85,7 @@ export function WorkflowToolbar() {
   };
 
   return (
-    <div className="flex items-center gap-2 p-2">
+    <div className="flex min-w-max items-center gap-2 p-2 max-md:gap-1 max-md:p-1.5">
       <Tooltip content="Run Workflow">
         <Button
           size="sm"

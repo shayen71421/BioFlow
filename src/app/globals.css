@@ -106,6 +106,76 @@
   stroke-width: 2;
 }
 
+.workflow-toolbar-position {
+  max-width: calc(100% - 2rem);
+}
+
+@media (max-width: 767px) {
+  .workflow-toolbar-position {
+    left: 0.5rem !important;
+    right: 0.5rem !important;
+    top: 0.5rem !important;
+    width: calc(100% - 1rem);
+  }
+}
+
+/* Keep the dashboard usable in embedded/mobile browsers that report a wider
+   layout viewport than the physical screen. */
+@media (max-width: 900px) {
+  .mobile-tooltip {
+    display: none !important;
+  }
+
+  .dashboard-sidebar {
+    position: fixed;
+    inset: auto 0 0;
+    z-index: 50;
+    width: 100% !important;
+    height: 4rem;
+    flex-direction: row;
+    border-right: 0;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .dashboard-sidebar .sidebar-header,
+  .dashboard-sidebar .sidebar-secondary,
+  .dashboard-sidebar .sidebar-label {
+    display: none !important;
+  }
+
+  .dashboard-main {
+    padding-bottom: 4rem;
+  }
+
+  .dashboard-sidebar .sidebar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 0.25rem;
+    padding: 0.5rem;
+  }
+
+  .dashboard-sidebar .sidebar-nav > button,
+  .dashboard-sidebar .sidebar-properties,
+  .dashboard-sidebar .mobile-more-trigger {
+    width: auto;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .dashboard-sidebar .mobile-more-trigger {
+    display: flex !important;
+  }
+
+  .dashboard-sidebar .mobile-more {
+    display: block !important;
+  }
+
+  .dashboard-sidebar .mobile-more:not(.mobile-more-open) {
+    display: none !important;
+  }
+}
+
 @keyframes ticker-scroll {
   0% {
     transform: translate3d(0, 0, 0);

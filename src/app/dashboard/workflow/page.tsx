@@ -132,19 +132,21 @@ export default function WorkflowPage() {
         <div
           ref={toolbarRef}
           className={cn(
-            'absolute z-10 transition-shadow',
+            'workflow-toolbar-position absolute z-10 transition-shadow',
             dragging ? 'shadow-2xl shadow-primary/20 scale-[1.02]' : 'shadow-lg',
           )}
           style={{ left: pos.x, top: pos.y }}
         >
-          <div className="flex items-stretch rounded-xl border border-border bg-surface">
+          <div className="flex max-w-full items-stretch overflow-hidden rounded-xl border border-border bg-surface">
             <button
               onMouseDown={onDragStart}
-              className="flex items-center justify-center rounded-l-xl px-2 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground hover:bg-surface-hover transition-colors border-r border-border"
+              className="flex shrink-0 cursor-grab items-center justify-center rounded-l-xl border-r border-border px-2 text-muted-foreground transition-colors hover:bg-surface-hover hover:text-foreground active:cursor-grabbing max-md:hidden"
             >
               <GripVertical size={14} />
             </button>
-            <WorkflowToolbar />
+            <div className="min-w-0 max-w-full overflow-x-auto">
+              <WorkflowToolbar />
+            </div>
           </div>
         </div>
       </div>

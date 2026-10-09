@@ -61,11 +61,11 @@ export function RightPanel() {
   return (
     <div
       className={cn(
-        'border-l border-border bg-background transition-all duration-300 overflow-hidden',
-        rightPanelOpen ? 'w-80' : 'w-0',
+        'overflow-hidden border-l border-border bg-background transition-all duration-300 max-md:fixed max-md:inset-x-0 max-md:bottom-16 max-md:z-40 max-md:h-[min(70vh,34rem)] max-md:border-l-0 max-md:border-t',
+        rightPanelOpen ? 'w-80 max-md:w-full' : 'w-0 max-md:w-0',
       )}
     >
-      <div className="w-80 h-full flex flex-col">
+      <div className="flex h-full w-80 flex-col max-md:w-full">
         <div className="flex items-center justify-between border-b border-border px-4 py-3">
           <h3 className="text-sm font-semibold text-foreground">Properties</h3>
           <button

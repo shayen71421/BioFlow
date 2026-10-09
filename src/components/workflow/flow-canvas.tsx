@@ -111,13 +111,13 @@ export function FlowCanvas() {
           />
           <Controls
             showInteractive={false}
-            className="!bg-surface !border-border !shadow-lg"
+            className="!bottom-4 !bg-surface !border-border !shadow-lg max-md:!bottom-20"
           />
           <MiniMap
             nodeColor={() => '#1E293B'}
             maskColor="rgba(10, 14, 23, 0.8)"
             style={{ background: '#111827' }}
-            className="!border-border !rounded-xl !shadow-lg"
+            className="!bottom-4 !right-4 !border-border !rounded-xl !shadow-lg max-md:!bottom-20 max-md:!right-2 max-md:!hidden"
             pannable
             zoomable
           />

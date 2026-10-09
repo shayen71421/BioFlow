@@ -29,7 +29,7 @@ export function Tooltip({ content, children, side = 'top' }: TooltipProps) {
       {show && (
         <div
           className={cn(
-            'absolute z-50 whitespace-nowrap rounded-md bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-lg border border-border pointer-events-none',
+            'mobile-tooltip absolute z-50 whitespace-nowrap rounded-md border border-border bg-popover px-2.5 py-1.5 text-xs text-popover-foreground shadow-lg pointer-events-none',
             sideStyles[side],
           )}
         >
